@@ -1,89 +1,16 @@
 // web/webpack.config.js
+/* global __dirname, module, process, require */
 
 const path = require("path");
 const webpack = require("webpack");
+const { loaders } = require("./webpack.common");
 
 const appDirectory = path.resolve(__dirname, "./");
-
-// Many OSS React Native packages are not compiled to ES5 before being
-// published. If you depend on uncompiled packages they may cause webpack build
-// errors. To fix this webpack can be configured to compile to the necessary
-// 'node_module'.
-const babelLoaderConfiguration = {
-  test: /\.js$/,
-  // Add every directory that needs to be compiled by Babel during the build.
-  include: [
-    path.resolve(appDirectory, "src"),
-    path.resolve(appDirectory, "node_modules/react-navigation"),
-    path.resolve(appDirectory, "node_modules/react-native-tab-view"),
-    path.resolve(appDirectory, "node_modules/react-native-paper"),
-    path.resolve(appDirectory, "node_modules/react-native-vector-icons"),
-    path.resolve(appDirectory, "node_modules/react-native-safe-area-view"),
-    path.resolve(appDirectory, "node_modules/react-native-platform-touchable")
-  ],
-  use: {
-    loader: "babel-loader",
-    options: {
-      // cacheDirectory: false,
-      babelrc: false,
-      // Babel configuration (or use .babelrc)
-      // This aliases 'react-native' to 'react-native-web' and includes only
-      // the modules needed by the app.
-      plugins: [
-        "react-native-web",
-        "transform-decorators-legacy",
-        [
-          "transform-runtime",
-          { helpers: false, polyfill: false, regenerator: true }
-        ]
-      ],
-      // The 'react-native' preset is recommended to match React Native's packager
-      presets: ["react-native"]
-    }
-  }
-};
-
-// This is needed for loading css
-const cssLoaderConfiguration = {
-  test: /\.css$/,
-  use: ["style-loader", "css-loader"]
-};
-
-const imageLoaderConfiguration = {
-  test: /\.(gif|jpe?g|png|svg)$/,
-  use: {
-    loader: "file-loader",
-    options: {
-      name: "[name].[ext]"
-    }
-  }
-};
-
-const ttfLoaderConfiguration = {
-  test: /\.ttf$/,
-  use: [
-    {
-      loader: "file-loader",
-      options: {
-        name: "./fonts/[hash].[ext]"
-      }
-    }
-  ],
-  include: [
-    path.resolve(appDirectory, "./src/assets/fonts"),
-    path.resolve(appDirectory, "node_modules/react-native-vector-icons")
-  ]
-};
 
 const commonConfig = {
   devtool: "eval",
   module: {
-    rules: [
-      babelLoaderConfiguration,
-      cssLoaderConfiguration,
-      imageLoaderConfiguration,
-      ttfLoaderConfiguration
-    ]
+    rules: loaders,
   },
 
   plugins: [
@@ -92,10 +19,10 @@ const commonConfig = {
     // wish to include additional optimizations.
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
+        process.env.NODE_ENV || "development",
       ),
-      __DEV__: process.env.NODE_ENV === "production" || true
-    })
+      __DEV__: process.env.NODE_ENV === "production" || true,
+    }),
   ],
 
   resolve: {
@@ -106,39 +33,38 @@ const commonConfig = {
     extensions: [".web.js", ".js"],
     alias: {
       "./assets/images/slack-icon.png": "./assets/images/slack-icon@2x.png",
-      "react-native": "react-native-web"
-    }
-  }
+      "react-native": "react-native-web",
+    },
+  },
 };
 
 const ssrConfig = {
   target: "node",
   // your web-specific entry file
   entry: {
-    ssr: path.resolve(appDirectory, "ssr/index.js")
+    ssr: path.resolve(appDirectory, "ssr/index.js"),
   },
   // configures where the build ends up
   output: {
     filename: "ssr.bundle.js",
     path: path.resolve(appDirectory, "./ssr/dist"),
     library: "library",
-    libraryTarget: "umd"
+    libraryTarget: "umd",
   },
-  ...commonConfig
+  ...commonConfig,
 };
 
 const clientConfig = {
   target: "web",
   entry: {
-    index: path.resolve(appDirectory, "src/index.js")
+    index: path.resolve(appDirectory, "src/index.js"),
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
     filename: "client.bundle.js",
     publicPath: "/assets/",
-    path: path.resolve(appDirectory, "./public/assets")
+    path: path.resolve(appDirectory, "./public/assets"),
   },
-  ...commonConfig
+  ...commonConfig,
 };
 
 module.exports = [ssrConfig, clientConfig];

@@ -21,10 +21,6 @@
 
 ; CUSTOME: Ignore 
 .*/node_modules/react-native-web/.*
-.*/node_modules/react-native/Libraries/vendor/emitter/EventSubscriptionVendor.js
-.*/node_modules/react-native/Libraries/vendor/emitter/EmitterSubscription.js
-.*/node_modules/react-native/Libraries/vendor/emitter/EventSubscription.js
-.*/node_modules/xdl/build/detach/AndroidShellApp.js.flow
 
 [include]
 
@@ -46,6 +42,8 @@ module.file_ext=.js
 module.file_ext=.jsx
 module.file_ext=.json
 module.file_ext=.native.js
+module.file_ext=.android.js
+module.file_ext=.ios.js
 
 suppress_type=$FlowIssue
 suppress_type=$FlowFixMe

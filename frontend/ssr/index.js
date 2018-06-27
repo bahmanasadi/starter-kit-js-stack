@@ -1,7 +1,7 @@
 import ReactDOMServer from "react-dom/server";
 import { AppRegistry } from "react-native-web";
 
-import App from "../src/App";
+import App from "../src/views/App";
 
 // register the app
 export function xyz(initialProps, nonce) {
@@ -10,7 +10,7 @@ export function xyz(initialProps, nonce) {
 
   // prerender the app
   const { element, getStyleElement } = AppRegistry.getApplication("App", {
-    initialProps
+    initialProps,
   });
   // first the element
   const html = ReactDOMServer.renderToString(element);

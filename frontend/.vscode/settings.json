@@ -1,4 +1,6 @@
 {
+  "editor.formatOnSave": true,
   "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow",
-  "javascript.validate.enable": false
+  "javascript.validate.enable": false,
+  "javascript.referencesCodeLens.enabled": true
 }
